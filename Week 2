@@ -1,0 +1,137 @@
+# Learned OBJECT ORIENTED PROGRAMMING :-
+OOP: (object oriented programming)
+1. classes and objects
+2. access modifiers
+3. constructers
+4. encapsulation
+5. abstarction
+6. inheritance
+7. polymorphism
+# Eample CODE for OOP :-
+#include <iostream>
+using namespace std;
+using std::string ;
+
+class abstractemployee{
+   virtual void askprom()= 0 ;
+};
+class employee:abstractemployee {
+ private:
+
+     string Company;
+     int Age;
+ 
+ protected: 
+    string Name;
+
+ public:  
+    employee(string name, string company, int age){
+        Name = name;
+        Company = company;
+        Age = age ;
+    }
+
+    void intro(){
+        cout<< "name " << Name <<endl;
+        cout<< "company " << Company << endl;
+        cout<< "age " << Age <<endl ;
+    }
+    
+     void setname(string name){
+        Name = name;
+    }
+    string getname(){
+        return Name;
+    }
+  void setcompany(string company){
+        Company = company;
+    }
+    string getcompany(){
+        return Company;
+    }
+    void setage(int age){
+        if (age>=18)
+        Age = age;
+    }
+    int getage(){
+        return Age;
+    };
+     void askprom(){
+        if (Age>30)
+        cout<<Name<<" got promoted"<< endl;
+        else 
+        cout<<Name<<" sorry no promotion"<< endl; 
+        };
+
+    Virtual void work(){
+        cout<< Name << " is checking mail, has backlog ,performing task..."<< endl;
+    }    
+    
+};
+
+/* 1. here this inherited class cannot access the private variable like (Name or Company or Age) so as we know 
+ that between private & public protected space comes so if we shift Name variable to protected space it 
+ can be accesed by inherited class see on 14th & implementation on the 66 line*/
+/*2. in INHERITANCE we can access the only the variable not all functions running in it as the are private 
+in default so in ordder to acess them we need to make the inherited class public by simply writing public in 
+front of it while inheritance */
+
+class developer:public employee {
+public:
+    string Favpl;
+    developer(string name, string company, int age, string favpl)
+    :employee(name , company, age)
+    {
+        Favpl = favpl; }
+    
+    void fixbug(){
+       cout<< getname()<<" fixed bug with "<< Favpl << endl; 
+       // here we accesed the Name variable by moving it to the protected space
+     Name = "land";
+     // in protected space the Name variable can be changed
+       cout<< Name <<" fixed bug with "<< Favpl << endl; 
+    }
+    void work(){
+        cout<< Name << " is writing"<<Favpl<< " code"<< endl;
+    }
+    };
+
+class teacher:public employee {
+  public:
+    string Subject;
+    void preparelecture(){
+        cout<< Name << "is preparing "<< Subject<< " lesson"<< endl;
+    }
+    teacher (string name, string company, int age,string subject)
+    :employee(name,company,age){
+        Subject = subject;
+    }
+     void work(){
+        cout<< Name << " is teaching"<<Subject<< endl;
+    }
+};
+
+
+int main(){
+    employee employee1 = employee("raj", "google" ,32);
+    employee1.intro();
+    employee employee2 =employee("krish", "amazon" ,20);
+    employee2.intro();
+    employee1.setage(17);
+    cout<< employee1.getname()<< " is "<< employee1.getage()<< "years old"<< endl;
+ 
+  //  employee1.askprom();
+  //  employee2.askprom();
+   
+   developer d = developer("shiv","yout",25 , "python");
+    d.fixbug();
+    d.askprom();
+
+ teacher t = teacher( "jack","cool school", 24, "science");
+ t.preparelecture();
+ t.askprom();
+
+ d.work();
+ t.work();
+}
+
