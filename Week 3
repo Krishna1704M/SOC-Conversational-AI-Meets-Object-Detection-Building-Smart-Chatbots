@@ -1,0 +1,112 @@
+Working with RASA:
+1: Initialize a Rasa Project :
+rasa init
+
+2: Define Intents and Entities:
+version: "2.0"
+nlu:
+- intent: greet
+  examples: |
+    - hey
+    - hello
+    - hi
+    - good morning
+    - good evening
+
+- intent: goodbye
+  examples: |
+    - bye
+    - goodbye
+    - see you later
+    - see you
+
+- intent: inform
+  examples: |
+    - my name is [John](name)
+    - I live in [New York](location)
+    - I am looking for a [restaurant](place)
+
+3: Define Responses:
+version: "2.0"
+intents:
+  - greet
+  - goodbye
+  - inform
+
+entities:
+  - name
+  - location
+  - place
+
+responses:
+  utter_greet:
+    - text: "Hello! How can I help you today?"
+
+  utter_goodbye:
+    - text: "Goodbye! Have a great day!"
+
+  utter_ask_name:
+    - text: "What's your name?"
+
+  utter_inform:
+    - text: "I see. Thank you for the information."
+
+session_config:
+  session_expiration_time: 60
+  carry_over_slots_to_new_session: true
+
+4: Define Stories:
+version: "2.0"
+stories:
+- story: greet and goodbye
+  steps:
+  - intent: greet
+  - action: utter_greet
+  - intent: goodbye
+  - action: utter_goodbye
+
+- story: provide information
+  steps:
+  - intent: inform
+  - action: utter_inform
+
+ 5: Train the Model:
+rasa train
+
+6: Testing the Assistant:
+rasa shell
+
+7: Running the Assistant with Actions:
+rasa run actions
+rasa run
+
+Example Custom Action
+Here's an example of a custom action in actions.py:
+# actions.py
+
+from typing import Any, Text, Dict, List
+from rasa_sdk import Action, Tracker
+from rasa_sdk.executor import CollectingDispatcher
+
+class ActionGreetUser(Action):
+
+    def name(self) -> Text:
+        return "action_greet_user"
+
+    def run(self, dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+
+        dispatcher.utter_message(text="Hello! How can I assist you today?")
+
+        return []
+To use this custom action, update your domain.yml to include the action:
+actions:
+  - action_greet_user
+And update your stories.yml to call this action:
+stories:
+- story: greet and ask for assistance
+  steps:
+  - intent: greet
+  - action: action_greet_user
+
